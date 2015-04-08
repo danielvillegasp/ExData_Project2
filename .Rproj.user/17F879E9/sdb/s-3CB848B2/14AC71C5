@@ -1,0 +1,16 @@
+{
+    "contents" : "require(dplyr)\nthis.dir <- dirname(parent.frame(2)$ofile)\nsetwd(this.dir)\ndataURL <- \"https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip\"\n\nif(!file.exists('./Data')){\n    dir.create('./Data')\n}\n\nif(!file.exists('./Data/pmdata.zip')){\n    osname <- Sys.info()[1]\n    if(osname == \"windows\"){\n        download.file(url = dataURL, \n                      './Data/pmdata.zip')\n    }else{\n        download.file(url = dataURL, \n                      './Data/pmdata.zip',\n                      method=\"curl\")\n    }\n}\n\nif(!file.exists('./Data/Source_Classification_Code.rds')){\n    unzip(zipfile = \"Data/pmdata.zip\",files =\"Source_Classification_Code.rds\", exdir=\"./Data\")\n}\n\nif(!file.exists('./Data/summarySCC_PM25.rds')){\n    unzip(zipfile = \"Data/pmdata.zip\",files =\"summarySCC_PM25.rds\", exdir=\"./Data\")\n}\n\n#NEI <- readRDS(\"./Data/summarySCC_PM25.rds\")\n#SCC <- readRDS(\"./Data/Source_Classification_Code.rds\")\n\n# 1. Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? Using the base \n# plotting system, make a plot showing the total PM2.5 emission from all sources for each of the \n# years 1999, 2002, 2005, and 2008.\n\ntotal_pm25 <- NEI %>%\n    select(Pollutant, Emissions, year) %>%\n    filter(year >= 1999 & year <= 2008) %>%\n    group_by(year) %>%\n    summarize(Emissions = sum(Emissions))\n\nplot(total_pm25$year, total_pm25$Emissions, type=\"l\")\n    \n# 2. Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == \"24510\") from \n# 1999 to 2008? Use the base plotting system to make a plot answering this question.\n\nbalt_pm25 <- NEI %>%\n    filter(fips == \"24510\") %>%\n    select(Pollutant, Emissions, year) %>%\n    filter(year >= 1999 & year <= 2008) %>%\n    group_by(year) %>%\n    summarize(Emissions = sum(Emissions))\n\nplot(balt_pm25$year, balt_pm25$Emissions, type=\"l\")\n\n# 3. Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable,\n# which of these four sources have seen decreases in emissions from 1999–2008 for Baltimore City?\n# Which have seen increases in emissions from 1999–2008? Use the ggplot2 plotting system to make a\n# plot answer this question.\n\nrequire(ggplot2)\nfourpoll <- NEI %>%\n    filter(fips == \"24510\") %>%\n    filter(year >= 1999 & year <= 2008) %>%\n    group_by(type, year) %>%\n    summarize(Emissions = sum(Emissions))\nggplot(fourpoll, aes(x=year, y=Emissions)) + geom_point() + geom_smooth(method=lm) + facet_grid(.~type)",
+    "created" : 1428470010787.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2329927897",
+    "id" : "14AC71C5",
+    "lastKnownWriteTime" : 1428473454,
+    "path" : "~/Documents/DataScienceTrack/ExploratoryDataAnalisys/Project2/main.R",
+    "project_path" : "main.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

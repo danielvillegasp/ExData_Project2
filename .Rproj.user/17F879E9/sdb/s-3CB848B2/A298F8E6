@@ -1,0 +1,16 @@
+{
+    "contents" : "## Save plots to png\n\n## Images where saved to the directory called \"img\"\nthis.dir <- dirname(parent.frame(2)$ofile)\nsetwd(this.dir)\ndataURL <- \"https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip\"\n\nif(!file.exists('./Data')){\n    dir.create('./Data')\n}\n\nif(!file.exists('./Data/edata.zip')){\n    osname <- Sys.info()[1]\n    if(osname == \"windows\"){\n        download.file(url = dataURL, \n                      './Data/edata.zip')\n    }else{\n        download.file(url = dataURL, \n                      './Data/edata.zip',\n                      method=\"curl\")\n    }\n}\nif(!file.exists('./Data/household_power_consumption.txt')){\n    unzip(zipfile = \"Data/edata.zip\",files =\"household_power_consumption.txt\", exdir=\"./Data\")\n}\n\nsource('./read.power.R')\nsource('./plot1.R')\nsource('./plot2.R')\nsource('./plot3.R')\nsource('./plot4.R')\nplots2png <- function(srcfile='./Data/household_power_consumption.txt',\n                      destfile='./img'){\n    # Description: Creates the file where the images are going to be saved. Then it sets\n    #              the device to png for each plot and saves each one.\n    powerData <- read.power(srcfile, strptime(c('2007-02-01',\n                                                '2007-02-02'),\n                                              format=\"%Y-%m-%d\"))\n        \n    if(!file.exists(destfile)){\n        dir.create(destfile)\n    }\n    png(file=paste(destfile, \"/plot1.png\", collapse=\"\", sep=\"\"), width=480, height=480, units=\"px\", bg=\"transparent\")\n    plot1(powerData)\n    dev.off()\n    png(file=paste(destfile, \"/plot2.png\", collapse=\"\", sep=\"\"), width=480, height=480, units=\"px\", bg=\"transparent\")\n    plot2(powerData)\n    dev.off()\n    png(file=paste(destfile, \"/plot3.png\", collapse=\"\", sep=\"\"), width=480, height=480, units=\"px\", bg=\"transparent\")\n    plot3(powerData)\n    dev.off()\n    png(file=paste(destfile, \"/plot4.png\", collapse=\"\", sep=\"\"), width=480, height=480, units=\"px\", bg=\"transparent\")\n    plot4(powerData)\n    dev.off()\n}\n\nplots2png()",
+    "created" : 1428470029840.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1805220645",
+    "id" : "A298F8E6",
+    "lastKnownWriteTime" : 1428458977,
+    "path" : "~/Documents/DataScienceTrack/ExploratoryDataAnalisys/Project1/ExData_Plotting1/plots2png.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
